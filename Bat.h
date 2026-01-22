@@ -13,11 +13,12 @@ private:
 
 public:
 	Bat(float startX, float startY);
-	FloatRect getPosition();
-	RectangleShape getShape();
-	void moveLeft();
-	void moveRight();
-	void stopLeft();
-	void stopRight();
-	void update(Time dt);
+
+	FloatRect			getPosition();
+	RectangleShape		getShape();
+	void				moveLeft();
+	void				moveRight();
+	void				stopLeft();
+	void				stopRight();
+	void				update(Time dt);
 };
