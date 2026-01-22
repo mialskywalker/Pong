@@ -2,17 +2,21 @@
 #include "Ball.h"
 #include <sstream>
 #include <cstdlib>
+#include <vector>
 
 int main()
 {
+
+
 	VideoMode vm(1920, 1080);
 
 	RenderWindow window(vm, "Pong", Style::Fullscreen);
-	int score = 0;
-	int lives = 3;
+	int scorePlayer1 = 0;
+	int scorePlayer2 = 0;
 
-	Bat bat(1920 / 2, 1080 - 20);
-	Ball ball(1920 / 2, 0);
+	Bat player1(1920 - 50, 1080 / 2);
+	Bat player2(50, 1080 / 2);
+	Ball ball(1920 / 2, 1080 / 2);
 
 	Text hud;
 
@@ -36,55 +40,62 @@ int main()
 		if (Keyboard::isKeyPressed(Keyboard::Escape))
 			window.close();
 
-		if (Keyboard::isKeyPressed(Keyboard::Left))
-			bat.moveLeft();
+		if (Keyboard::isKeyPressed(Keyboard::Up) && player1.getPosition().top > 0)
+			player1.moveUp();
 		else
-			bat.stopLeft();
+			player1.stopUp();
 
-		if (Keyboard::isKeyPressed(Keyboard::Right))
-			bat.moveRight();
+		if (Keyboard::isKeyPressed(Keyboard::Down) && player1.getPosition().top < 1080 - 150)
+			player1.moveDown();
 		else
-			bat.stopRight();
+			player1.stopDown();
+
+		if (Keyboard::isKeyPressed(Keyboard::W) && player2.getPosition().top > 0)
+			player2.moveUp();
+		else
+			player2.stopUp();
+
+		if (Keyboard::isKeyPressed(Keyboard::S) && player2.getPosition().top < 1080 - 150)
+			player2.moveDown();
+		else
+			player2.stopDown();
 
 		Time dt = clock.restart();
-		bat.update(dt);
+		player1.update(dt);
+		player2.update(dt);
 		ball.update(dt);
 
 		std::stringstream ss;
-		ss << "Score: " << score << "   Lives:" << lives;
+		ss << "                       Score: " << scorePlayer1 << "                                Score:" << scorePlayer2;
 		hud.setString(ss.str());
 
-		if (ball.getPosition().top > window.getSize().y)
+
+		if (ball.getPosition().left > window.getSize().x)
 		{
-			ball.reboundBottom();
-			lives--;
-			
-			if (lives < 1)
-			{
-				score = 0;
-				lives = 3;
-			}
+			ball.reboundSide();
+			scorePlayer1++;
 		}
 
-		if (ball.getPosition().top < 0)
+		if (ball.getPosition().left < 0)
 		{
-			ball.reboundBatOrTop();
-			score++;
+			ball.reboundSide();
+			scorePlayer2++;
 		}
 
-		if (ball.getPosition().left < 0 || ball.getPosition().left + ball.getPosition().width > window.getSize().x)
+		if (ball.getPosition().intersects(player1.getPosition()) || ball.getPosition().intersects(player2.getPosition()))
 		{
-			ball.reboundSides();
+			ball.reboundBat();
 		}
 
-		if (ball.getPosition().intersects(bat.getPosition()))
+		if (ball.getPosition().top < 0 || ball.getPosition().top + ball.getPosition().height > window.getSize().y)
 		{
-			ball.reboundBatOrTop();
+			ball.reboundTopOrBottom();
 		}
 
 		window.clear();
 		window.draw(hud);
-		window.draw(bat.getShape());
+		window.draw(player1.getShape());
+		window.draw(player2.getShape());
 		window.draw(ball.getShape());
 		window.display();
 	}

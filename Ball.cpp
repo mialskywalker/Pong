@@ -21,21 +21,21 @@ float Ball::getXVelocity()
 	return m_DirectionX;
 }
 
-void Ball::reboundSides()
+void Ball::reboundTopOrBottom()
+{
+	m_DirectionY = -m_DirectionY;
+}
+
+void Ball::reboundBat()
 {
 	m_DirectionX = -m_DirectionX;
 }
 
-void Ball::reboundBatOrTop()
+void Ball::reboundSide()
 {
-	m_DirectionY = -m_DirectionY;
-}
-
-void Ball::reboundBottom()
-{
-	m_Position.y = 0;
-	m_Position.x = 500;
-	m_DirectionY = -m_DirectionY;
+	m_Position.y = 540;
+	m_Position.x = 960;
+	m_DirectionX = -m_DirectionX;
 }
 
 void Ball::update(Time dt)

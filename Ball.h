@@ -17,8 +17,8 @@ public:
 	FloatRect			getPosition();
 	RectangleShape		getShape();
 	float				getXVelocity();
-	void				reboundSides();
-	void				reboundBatOrTop();
-	void				reboundBottom();
+	void				reboundTopOrBottom();
+	void				reboundBat();
+	void				reboundSide();
 	void				update(Time dt);
 };
